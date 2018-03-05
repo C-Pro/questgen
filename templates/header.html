@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Страница сыщика</title>
+<style>
+    body {
+        background: #e0daba; /* Old browsers */
+        background: linear-gradient(to right, #000000 0%,#000000 10%, #99841e 12%, #e0daba 20%,#e0daba 80%,#99841e 89%,#000000 90%,#000000 100%);
+    }
+
+    .logo {
+        font-size: 24pt;
+        margin-top: 5%;
+    }
+    .error_state { box-shadow: 0 0 10px #AA0000; background-color: #FFF0F0;}
+
+
+</style>
+<script>
+    var input;
+    var submit;
+	var	rus = "щ ш ч ц ю я ё ж ъ ы э а б в г д е з и й к л м н о п р с т у ф х ь".split(/ +/g);
+	var eng = "sh' sh ch cz yu ya yo zh '' y' e' a b v g d e z i iy k l m n o p r s t u f kh '".split(/ +/g);
+	var tr = {" ": "_", "\t": "_"}
+
+	for (var i = 0; i < rus.length; i++) {
+		tr[rus[i]] = eng[i];
+	}
+
+	function Translit(text) {
+        text = text.toLowerCase().trim()    ;
+		var ret = "";
+		for(var i = 0; i < text.length; i++) {
+			if (text[i] in tr) {
+				ret = ret + tr[text[i]];
+			} else {
+				ret = ret + text[i];
+			}
+		}
+		return ret;
+	}
+
+
+    function OnLoad() {
+        input = document.getElementById('answer');
+        submit = document.getElementById('submit');
+    }
+    function SubmitAnswer() {
+        CheckAndRedirect(Translit(input.value));
+        submit.value = 'Проверяю...';
+    }
+
+    function CheckAndRedirect(answer) {
+        var file = answer + '.html'
+        var xhttp = new XMLHttpRequest();
+        xhttp.open('HEAD', file, true);
+        xhttp.onreadystatechange = function() {
+            if ( this.status == 200) {
+                window.location = file;
+            } else if ( this.status != 200 ) {
+                input.classList.add('error_state');
+                setTimeout(function() {
+                    input.classList.remove('error_state');
+                }, 1000);
+            }
+            submit.value = 'Проверить';
+            input.value = '';
+        }
+        xhttp.send();
+    }
+</script>
+</head>
+<body onload='OnLoad()'>
+    <table border="0" width="60%" align="center">
+        <tr>
+            <td align='center' width="100%" class='logo'>&#x1F50D;</td>
+        </tr>
+        <tr>
+            <td align='center' width="100%">
+    <!-- end header -->
+
